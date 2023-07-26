@@ -1,6 +1,7 @@
 const { promises } = require('node:dns')
 const fs = require('node:fs/promises')
 const path = require('node:path')
+const pc = require('picocolors')
 
 //Si no hay argumentos, usamos "."
 const folder = process.argv[2] ?? '.'
@@ -20,7 +21,7 @@ async function ls (folder){
 	try {
 		files = await fs.readdir(folder)//Devuelve un arreglo con todos los archivos del directorio
 	} catch (error) {
-		console.log(`No se pudo leer el directorio ${error}`)
+		console.log(pc.red(`No se pudo leer el directorio ${error}`))
 		process.exit(1)
 	}
   //EL map con el async mapea todas las promesas a la vez
@@ -40,7 +41,7 @@ async function ls (folder){
 		const fileModified = stats.mtime.toLocaleDateString() //Cuando se modifico el archivo
 
 		//padEnd(20) indica que siempre ocupe 20 espacios, padStart(10) para que deje la sepacion de lo que ocupa pero al principio
-		return `${fileType.padEnd(5)} ${file.padEnd(30)} ${fileSize.toString().padStart(10)} ${fileModified.padStart(10)}`
+		return `${pc.white(fileType)} ${pc.blue(file.padEnd(30))} ${pc.green(fileSize.toString().padStart(10))} ${pc.yellow(fileModified.padStart(10))}`
 	})
 
 	const filesInfo = await Promise.all(filesPromises)//Recibe un arreglo de promesas, y espera a que llegue cada una
