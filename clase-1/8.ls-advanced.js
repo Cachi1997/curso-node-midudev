@@ -66,3 +66,9 @@ async function ls (folder) {
 // }
 
 ls(folder)
+
+// Tareas
+// añadir mas opciones
+// Mostrar mas informacion
+// como diferenciar archivos ocultos de archivos normales
+// cambiar los colores de los ocultos
