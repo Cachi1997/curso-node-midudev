@@ -1,5 +1,6 @@
 const express = require('express')
 const crypto = require('node:crypto')
+const cors = require('cors')
 const movies = require('./movies.json')
 const { validateMovie, valdatePartialMovie } = require('./schemas/movies')
 
@@ -12,6 +13,27 @@ const ACCEPTED_ORIGINS = [
 
 const app = express()
 app.use(express.json()) // Middleware
+
+//Utilizando la libreria cors podemos hacer asi:
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     const ACCEPTED_ORIGINS = [
+//       'http://localhost:8080',
+//       'http://localhost:1234',
+//       'https://movies.com',
+//       'https://midu.dev'
+//     ]
+
+//     if(ACCEPTED_ORIGINS.includes(origin)){
+//       return callback(null, true)
+//     }
+
+//     if(!origin){
+//       return callback(null, true)
+//     }
+//   }
+// }))
+
 app.disable('x-powered-by')
 
 // Todos los recursos que sean MOVIES se identifica con /movies
@@ -89,6 +111,37 @@ app.patch('/movies/:id', (req, res) => {
   movies[movieIndex] = updateMovie
   return res.json(updateMovie)
 
+})
+
+app.delete('/movies/:id', (req, res) => {
+
+  const origin = req.header('origin')
+
+  if(ACCEPTED_ORIGINS.includes(origin) || !origin){
+    res.header('Access-Control-Allow-Origin', origin)
+  }
+
+  const { id } = req.params
+  const movieIndex = movies.findIndex(movie => movie.id === id)
+
+  if(movieIndex === -1){
+    return res.status(404).json({ message: 'Movie not found' })
+  }
+
+  movies.splice(movieIndex, 1)
+
+  return res.json({ message: 'Movie deleted' })
+})
+
+app.options('/movies/:id', (req, res) => {
+  const origin = req.header('origin')
+
+  if(ACCEPTED_ORIGINS.includes(origin) || !origin){
+    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE')
+  }
+
+  res.sendStatus(200)
 })
 
 const PORT = process.env.PORT ?? 1234
