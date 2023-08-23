@@ -16,9 +16,20 @@ Content-Type: application/json
   "year": 1975,
   "director": "Francis Ford Coppola",
   "duration": 175,
+  "rate": 5,
   "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
   "genre": [
     "Crime",
     "Drama"
   ]
+}
+
+### Actualizar una pelicula
+
+PATCH http://localhost:1234/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
+Content-Type: application/json
+
+{
+  "title": "Jurassic Park",
+  "year": 2000
 }
