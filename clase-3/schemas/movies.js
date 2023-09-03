@@ -1,4 +1,4 @@
-const z = require('zod')
+import z from 'zod'
 
 //Esta es una forma de validar los datos
 const movieSchema = z.object({
@@ -23,20 +23,15 @@ const movieSchema = z.object({
 	)
 })
 
-function validateMovie(object){
+export function validateMovie(object){
 	//safeParse me devuelve un objeto que indica si hay un errory si no, devuelve los datos, de esta forma validamos que
 	//la pelicula este formateada correctamente
 	return movieSchema.safeParse(object)
 }
 
-function valdatePartialMovie(object) {
+export function valdatePartialMovie(object) {
 	//Partial va a hacer que todas las propiedades del objeto movie sean opcionales
 	//De forma que si no esta esa propiedad, no hace nada
 	//Pero si esta, la valida
 	return movieSchema.partial().safeParse(object)
-}
-
-module.exports = {
-	validateMovie,
-	valdatePartialMovie
 }
